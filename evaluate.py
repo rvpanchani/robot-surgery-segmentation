@@ -58,7 +58,7 @@ if __name__ == '__main__':
     arg('--train_path', type=str, default='data/cropped_train',
         help='path where train images with ground truth are located')
     arg('--target_path', type=str, default='predictions/unet11', help='path with predictions')
-    arg('--problem_type', type=str, default='parts', choices=['binary', 'parts', 'instruments'])
+    arg('--problem_type', type=str, default='binary', choices=['binary', 'parts', 'instruments'])
     args = parser.parse_args()
 
     result_dice = []

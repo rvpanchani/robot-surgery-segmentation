@@ -11,7 +11,7 @@ import torch.backends.cudnn as cudnn
 import torch.backends.cudnn
 
 from models import UNet11, LinkNet34, UNet, UNet16, D_LinkNet34
-from loss import LossBinary, LossMulti
+from loss import LossBinary, LossMulti, LossBCE_DICE
 from dataset import RoboticsDataset
 import utils
 
@@ -71,7 +71,8 @@ def main():
         model = nn.DataParallel(model, device_ids=device_ids).cuda()
 
     if args.type == 'binary':
-        loss = LossBinary(jaccard_weight=args.jaccard_weight)
+        # loss = LossBinary(jaccard_weight=args.jaccard_weight)
+        loss = LossBCE_DICE()
     else:
         loss = LossMulti(num_classes=num_classes, jaccard_weight=args.jaccard_weight)
 

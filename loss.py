@@ -58,3 +58,18 @@ class LossMulti:
                 loss += (1 - (intersection + eps) / (union - intersection + eps)) * self.jaccard_weight
 
         return loss
+
+class LossBCE_DICE:
+    """
+    Loss defined as BCE + DICE
+    """
+
+    def __init__(self):
+        self.nll_loss = nn.BCELoss()
+
+    def __call__(self, outputs, targets):
+        outputs = F.sigmoid(outputs)
+        bce_loss = self.nll_loss(outputs, targets)
+        dice_loss = (2. * (outputs * targets).sum() + 1) / (outputs.sum() + targets.sum() + 1)
+        loss = bce_loss + (1 - dice_loss)
+        return loss

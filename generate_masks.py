@@ -5,7 +5,7 @@ import argparse
 from prepare_train_val import get_split
 from dataset import RoboticsDataset
 import cv2
-from models import UNet16, LinkNet34, UNet11, UNet
+from models import UNet16, LinkNet34, UNet11, UNet, D_LinkNet34
 import torch
 from pathlib import Path
 from tqdm import tqdm
@@ -51,6 +51,8 @@ def get_model(model_path, model_type='unet11', problem_type='binary'):
         model = LinkNet34(num_classes=num_classes)
     elif model_type == 'UNet':
         model = UNet(num_classes=num_classes)
+    elif model_type == 'DLinkNet':
+        model = D_LinkNet34(num_classes=num_classes, pretrained=True)
 
     state = torch.load(str(model_path))
     state = {key.replace('module.', ''): value for key, value in state['model'].items()}
