@@ -23,7 +23,7 @@ def cuda(x):
 def write_event(log, step: int, **data):
     data['step'] = step
     data['dt'] = datetime.now().isoformat()
-    log.write(json.dumps(data, sort_keys=True))
+    log.write(json.dumps(str(data), sort_keys=True))
     log.write('\n')
     log.flush()
 

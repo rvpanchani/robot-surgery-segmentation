@@ -5,7 +5,7 @@ from torch.utils.data import Dataset
 from pathlib import Path
 import prepare_data
 
-data_path = Path('data')
+data_path = Path(r'D:\development\concept_development\Road_Detection\dataset\codalab_dataset')
 
 
 class RoboticsDataset(Dataset):
@@ -23,7 +23,6 @@ class RoboticsDataset(Dataset):
         img_file_name = self.file_names[idx]
         img = load_image(img_file_name)
         mask = load_mask(img_file_name, self.problem_type)
-
         img, mask = self.transform(img, mask)
 
         if self.mode == 'train':
@@ -33,7 +32,6 @@ class RoboticsDataset(Dataset):
                 return to_float_tensor(img), torch.from_numpy(mask).long()
         else:
             return to_float_tensor(img), str(img_file_name)
-
 
 def to_float_tensor(img):
     return torch.from_numpy(np.moveaxis(img, -1, 0)).float()
@@ -46,7 +44,7 @@ def load_image(path):
 
 def load_mask(path, problem_type):
     if problem_type == 'binary':
-        mask_folder = 'binary_masks'
+        mask_folder = 'labels'
         factor = prepare_data.binary_factor
     elif problem_type == 'parts':
         mask_folder = 'parts_masks'

@@ -10,12 +10,12 @@ from torch.utils.data import DataLoader
 import torch.backends.cudnn as cudnn
 import torch.backends.cudnn
 
-from models import UNet11, LinkNet34, UNet, UNet16
+from models import UNet11, LinkNet34, UNet, UNet16, D_LinkNet34
 from loss import LossBinary, LossMulti
 from dataset import RoboticsDataset
 import utils
 
-from prepare_train_val import get_split
+from prepare_train_val import get_split, get_train_val_files
 
 from transforms import (DualCompose,
                         ImageOnly,
@@ -32,11 +32,11 @@ def main():
     arg('--fold', type=int, help='fold', default=0)
     arg('--root', default='runs/debug', help='checkpoint root')
     arg('--batch-size', type=int, default=1)
-    arg('--n-epochs', type=int, default=100)
-    arg('--lr', type=float, default=0.0001)
-    arg('--workers', type=int, default=8)
+    arg('--n-epochs', type=int, default=10)
+    arg('--lr', type=float, default=0.0002)
+    arg('--workers', type=int, default=10)
     arg('--type', type=str, default='binary', choices=['binary', 'parts', 'instruments'])
-    arg('--model', type=str, default='UNet', choices=['UNet', 'UNet11', 'LinkNet34'])
+    arg('--model', type=str, default='DLinkNet', choices=['UNet', 'UNet11', 'LinkNet34', 'DLinkNet'])
 
     args = parser.parse_args()
 
@@ -58,6 +58,8 @@ def main():
         model = UNet16(num_classes=num_classes, pretrained='vgg')
     elif args.model == 'LinkNet34':
         model = LinkNet34(num_classes=num_classes, pretrained=True)
+    elif args.model == 'DLinkNet':
+        model = D_LinkNet34(num_classes=num_classes, pretrained=True)
     else:
         model = UNet(num_classes=num_classes, input_channels=3)
 
@@ -84,7 +86,8 @@ def main():
             pin_memory=torch.cuda.is_available()
         )
 
-    train_file_names, val_file_names = get_split(args.fold)
+    # train_file_names, val_file_names = get_split(args.fold)
+    train_file_names, val_file_names = get_train_val_files()
 
     print('num train = {}, num_val = {}'.format(len(train_file_names), len(val_file_names)))
 
@@ -123,4 +126,5 @@ def main():
 
 
 if __name__ == '__main__':
+    # torch.multiprocessing.freeze_support()
     main()

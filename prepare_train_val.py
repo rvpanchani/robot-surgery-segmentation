@@ -19,3 +19,9 @@ def get_split(fold):
             train_file_names += list((train_path / ('instrument_dataset_' + str(instrument_id)) / 'images').glob('*'))
 
     return train_file_names, val_file_names
+
+def get_train_val_files():
+    val_file_names = list((data_path / 'val' / 'images').glob('*'))
+    train_file_names = list((data_path / 'train' / 'images').glob('*'))
+
+    return train_file_names, val_file_names
